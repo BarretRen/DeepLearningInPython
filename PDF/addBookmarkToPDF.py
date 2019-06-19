@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*- 
 # 封装的PDF文档书签生成工具，需要提供PDF文件和书签TXT文件作为输入
+# 目前支持三级目录分级
 from PyPDF2 import PdfFileReader as reader,PdfFileWriter as writer
 import os
-import sys
 
 class PDFHandleMode(object):
     '''
@@ -63,8 +63,9 @@ class MyPDFHandler(object):
         :param str fit: 跳转到书签页后的缩放方式
         :return: None
         '''
-        self.__writeable_pdf.addBookmark(title,page - 1,parent = parent,color = color,fit = fit)
+        bookmark = self.__writeable_pdf.addBookmark(title,page - 1,parent = parent,color = color,fit = fit)
         print('add_one_bookmark success! bookmark title is: {0}'.format(title))
+        return bookmark
 
     def add_bookmarks(self,bookmarks):
         '''
@@ -72,8 +73,15 @@ class MyPDFHandler(object):
         :param bookmarks: 书签元组列表，其中的页码表示的是PDF中的绝对页码，值为1表示第一页
         :return: None
         '''
-        for title,page in bookmarks:
-            self.add_one_bookmark(title,page)
+        l1 = None
+        l2 = None
+        for level,title,page in bookmarks:
+            if (level == 1):
+                l1 = self.add_one_bookmark(title,page)
+            elif (level == 2):
+                l2 = self.add_one_bookmark(title,page, l1)
+            else:
+                self.add_one_bookmark(title,page, l2)
         print('add_bookmarks success! add {0} pieces of bookmarks to PDF file'.format(len(bookmarks)))
 
     def read_bookmarks_from_txt(self,txt_file_path,page_offset = 0):
@@ -92,19 +100,22 @@ class MyPDFHandler(object):
                 line = line.rstrip()
                 if not line:
                     continue
-                # 以'@'作为标题、页码分隔符
+                # 以'@'作为标题、页码分隔符,以' '作为章节号和内容的分隔符
                 print('read line is: {0}'.format(line))
                 try:
+                    chapter = line.split(' ')[0].rstrip()
+                    level = len(chapter.split('.'))
+                    
                     title = line.split('@')[0].rstrip()
                     page = line.split('@')[1].strip()
                 except IndexError as msg:
                     print(msg)
                     continue
-                # title和page都不为空才添加书签，否则不添加
-                if title and page:
+                # level,title和page都不为空才添加书签，否则不添加
+                if level and title and page:
                     try:
                         page = int(page) + page_offset
-                        bookmarks.append((title, page))
+                        bookmarks.append((level, title, page))
                     except ValueError as msg:
                         print(msg)
 
@@ -122,9 +133,9 @@ class MyPDFHandler(object):
         print('add_bookmarks_by_read_txt success!')
 
 def main():
-    pdf_handler = MyPDFHandler(u'TCPIP详解卷一.pdf',PDFHandleMode.NEWLY)
-    pdf_handler.add_bookmarks_by_read_txt('1.txt')
-    pdf_handler.save2file(u'TCPIP详解卷一-目录书签版.pdf')
+    pdf_handler = MyPDFHandler(u'C:/N-20L6PF1PYK28-Data/barretr/Desktop/TCPIP详解卷一.pdf',PDFHandleMode.NEWLY)
+    pdf_handler.add_bookmarks_by_read_txt('C:/N-20L6PF1PYK28-Data/barretr/Desktop/1.txt')
+    pdf_handler.save2file(u'C:/N-20L6PF1PYK28-Data/barretr/Desktop/TCPIP详解卷一-目录书签版.pdf')
 
 if __name__ == '__main__':
     main()
