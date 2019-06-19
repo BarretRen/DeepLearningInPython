@@ -6,7 +6,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtWidgets
 
 
 class Ui_MainWindow(object):
@@ -42,11 +42,9 @@ class Ui_MainWindow(object):
         self.toolButton_3 = QtWidgets.QToolButton(self.centralwidget)
         self.toolButton_3.setGeometry(QtCore.QRect(580, 210, 47, 21))
         self.toolButton_3.setObjectName("toolButton_3")
-        self.buttonBox = QtWidgets.QDialogButtonBox(self.centralwidget)
-        self.buttonBox.setGeometry(QtCore.QRect(260, 380, 193, 28))
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel
-                                          | QtWidgets.QDialogButtonBox.Ok)
-        self.buttonBox.setObjectName("buttonBox")
+        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton.setGeometry(QtCore.QRect(320, 390, 93, 28))
+        self.pushButton.setObjectName("pushButton")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 26))
@@ -61,10 +59,11 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "PDF书签生成工具"))
         self.label.setText(_translate("MainWindow", "PDF文件"))
         self.label_2.setText(_translate("MainWindow", "目录txt文件"))
         self.label_3.setText(_translate("MainWindow", "输出文件"))
         self.toolButton.setText(_translate("MainWindow", "..."))
         self.toolButton_2.setText(_translate("MainWindow", "..."))
         self.toolButton_3.setText(_translate("MainWindow", "..."))
+        self.pushButton.setText(_translate("MainWindow", "开始"))
