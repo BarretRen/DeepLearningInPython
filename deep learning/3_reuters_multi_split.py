@@ -23,7 +23,7 @@ def vectorize_sequences(sequeces, dimension=10000):
 # 将训练数据和测试数据向量化
 x_train = vectorize_sequences(train_data)
 x_test = vectorize_sequences(test_data)
-# 使用keras内置方法将标签向量化，将array变为二维矩阵
+# 使用keras内置方法将标签向量化，将array变为one-hot编码
 one_hot_train_labels = to_categorical(train_labels)
 one_hot_test_labels = to_categorical(test_labels)
 # 留出验证集
