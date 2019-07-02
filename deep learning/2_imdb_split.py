@@ -64,7 +64,7 @@ plt.legend()
 plt.show()
 
 # 绘制训练精度和验证精度
-plt.clf()  # 情况之前图像
+plt.clf()  # 清空之前图像
 acc = history_dic['acc']
 val_acc = history_dic['val_acc']
 plt.plot(epochs, acc, 'bo', label='Training acc')
