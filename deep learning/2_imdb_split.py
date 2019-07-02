@@ -64,7 +64,7 @@ plt.legend()
 plt.show()
 
 # 绘制训练精度和验证精度
-plt.clf() # 情况之前图像
+plt.clf()  # 情况之前图像
 acc = history_dic['acc']
 val_acc = history_dic['val_acc']
 plt.plot(epochs, acc, 'bo', label='Training acc')
@@ -74,3 +74,11 @@ plt.xlabel('Epochs')
 plt.ylabel('Accuracy')
 plt.legend()
 plt.show()
+
+# 上面的模型会出现过拟合，在第4轮之后的训练都朝着过拟合发展了。下面开始一个新的模型，只训练4轮
+model.fit(x_train, y_train, epochs=4, batch_size=512)
+result = model.evaluate(x_test, y_test)
+print(result)
+
+# 获取在测试集上的预测结果
+print(model.predict(x_test))
