@@ -1,9 +1,10 @@
-# 正则化模型option1 减小模型大小，延迟过拟合，采用问题为：IMDB数据集分类
+# 正则化模型option2 添加权重正则化l1或l2，延迟过拟合，采用问题为：IMDB数据集分类
 from keras.datasets import imdb
 from keras import models
 from keras import layers
 import numpy as np
 import matplotlib.pyplot as plt
+from keras import regularizers
 
 # 从数据中选择10000个单词
 (train_data, train_labels), (test_data,
@@ -55,8 +56,16 @@ epochs = range(1, len(loss_value) + 1)
 
 # 构建神经网络层
 model2 = models.Sequential()
-model2.add(layers.Dense(4, activation='relu', input_shape=(10000, )))
-model2.add(layers.Dense(4, activation='relu'))  # relu将所有负值归零
+# l2(0.001)的意思是该层权重矩阵的每个系数都会使网络总损失增加 0.001 * weight_value
+model2.add(
+    layers.Dense(16,
+                 activation='relu',
+                 input_shape=(10000, ),
+                 kernel_regularizer=regularizers.l2(0.001)))
+model2.add(
+    layers.Dense(16,
+                 activation='relu',
+                 kernel_regularizer=regularizers.l2(0.001)))  # relu将所有负值归零
 model2.add(layers.Dense(1, activation='sigmoid'))  # sigmoid将任意值压缩到0-1之间
 
 # 编译模型，选择损失函数和优化器

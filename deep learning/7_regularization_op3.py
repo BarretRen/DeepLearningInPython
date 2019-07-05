@@ -1,9 +1,10 @@
-# 正则化模型option1 减小模型大小，延迟过拟合，采用问题为：IMDB数据集分类
+# 正则化模型option3 添加dropout，延迟过拟合，采用问题为：IMDB数据集分类
 from keras.datasets import imdb
 from keras import models
 from keras import layers
 import numpy as np
 import matplotlib.pyplot as plt
+from keras import regularizers
 
 # 从数据中选择10000个单词
 (train_data, train_labels), (test_data,
@@ -55,8 +56,10 @@ epochs = range(1, len(loss_value) + 1)
 
 # 构建神经网络层
 model2 = models.Sequential()
-model2.add(layers.Dense(4, activation='relu', input_shape=(10000, )))
-model2.add(layers.Dense(4, activation='relu'))  # relu将所有负值归零
+model2.add(layers.Dense(16, activation='relu', input_shape=(10000, )))
+model2.add(layers.Dropout(0.5))  # 舍弃50%输出
+model2.add(layers.Dense(16, activation='relu'))  # relu将所有负值归零
+model2.add(layers.Dropout(0.5))
 model2.add(layers.Dense(1, activation='sigmoid'))  # sigmoid将任意值压缩到0-1之间
 
 # 编译模型，选择损失函数和优化器
@@ -74,7 +77,7 @@ history2 = model2.fit(partial_x_train,
 loss_value2 = history2.history['val_loss']
 
 plt.plot(epochs, loss_value, 'bo', label='normal loss')  # bo为蓝色圆点
-plt.plot(epochs, loss_value2, 'ro', label='l2 loss')
+plt.plot(epochs, loss_value2, 'ro', label='dropout loss')
 plt.title('loss')
 plt.xlabel('Epochs')
 plt.ylabel('Loss')
