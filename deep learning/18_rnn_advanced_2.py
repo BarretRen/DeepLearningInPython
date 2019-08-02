@@ -1,6 +1,10 @@
-# RNN高级技巧
+# RNN高级技巧2：使用循环dropout降低过拟合
 import numpy as np
 import matplotlib.pyplot as plt
+from keras.models import Sequential
+from keras import layers
+from keras.optimizers import RMSprop
+
 # 从文件中获取天气数据集
 f = open('./jena_climate_2009_2016.csv')
 data = f.read()
@@ -78,3 +82,31 @@ test_gen = generator(float_data, lookback, delay, 300001, None, False, step,
 # 计算获得数据集的抽取次数
 val_steps = (300000 - 200001 - lookback) // batch_size
 test_steps = (len(float_data) - 300001 - lookback) // batch_size
+
+# ===========================创建一个GRU循环网络模型，并使用dropout
+model = Sequential()
+# 添加循环dropput
+model.add(
+    layers.GRU(32,
+               dropout=0.2,
+               recurrent_dopout=0.2,
+               input_shape=(None, float_data.shape[-1])))
+model.add(layers.Dense(1))
+
+model.compile(optimizer=RMSprop(), loss='mae')
+history = model.fit_generator(
+    train_gen,
+    steps_per_epoch=500,
+    epochs=40,  # dropout会使网络需要更长时间收敛，这里需要增加训练轮数
+    validation_data=val_gen,
+    validation_steps=val_steps)
+
+loss = history.history['loss']
+val_loss = history.history['val_loss']
+epochs = range(1, len(loss) + 1)
+plt.figure()
+plt.plot(epochs, loss, 'bo', label='Training loss')
+plt.plot(epochs, val_loss, 'b', label='Validation loss')
+plt.title('Training and validation loss')
+plt.legend()
+plt.show()
