@@ -21,10 +21,10 @@ x_test = preprocessing.sequence.pad_sequences(x_test, maxlen=maxlen)
 print('input train shape:', x_train.shape)
 print('input test shape:', x_test.shape)
 
-# 用Embedding词嵌入层和GRU层构建模型
+# 构建一个双向LSTM
 model = models.Sequential()
 model.add(layers.Embedding(max_features, 32))
-model.add(layers.GRU(32))
+model.add(layers.Bidirectional(layers.LSTM(32)))
 model.add(layers.Dense(1, activation='sigmoid'))  # 添加分类器，分为两类
 
 model.compile(optimizer='rmsprop', loss='binary_crossentropy', metrics=['acc'])
