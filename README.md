@@ -8,3 +8,8 @@
 
 ![](img/DLpython.png)
 
+### 2 honds-on machine learning with scikit-learn and tensorflow
+
+**hands on ml with sklearn and tf**：保存如下书籍的书中代码
+
+![](img/sklearn.jpg)
